@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minnie ❤️</title>
+
+  <style>
+    :root{
+      --bg:#0b1410;
+      --bg2:#070e0b;
+      --paper:#fbf4e6;
+      --ink:#1a1a1a;
+      --forest:#0f2f22;
+      --forest2:#123a2a;
+      --gold:#c9a23a;
+      --rose:#d46b7f;
+      --glass:rgba(255,255,255,.06);
+      --shadow:0 18px 55px rgba(0,0,0,.4);
+      --radius:22px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(800px 500px at 15% 15%, rgba(201,162,58,.18), transparent 60%),
+        radial-gradient(900px 650px at 80% 25%, rgba(212,107,127,.14), transparent 60%),
+        linear-gradient(160deg,var(--bg),var(--bg2));
+      color:var(--paper);
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(1000px,100%);
+      margin:0 auto;
+      padding:28px 16px 90px;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .brand{
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
+    .chip{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.15);
+      color:var(--paper);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+    }
+
+    .hero{
+      background:linear-gradient(180deg,#fbf4e6,#f6eddc);
+      color:var(--ink);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+    }
+
+    h1{
+      margin:10px 0;
+      font-size:clamp(34px,5vw,56px);
+      line-height:1.05;
+    }
+
+    .typeLine{
+      font-size:17px;
+      line-height:1.7;
+      color:rgba(26,26,26,.82);
+      min-height:80px;
+      max-width:65ch;
+    }
+
+    .buttons{
+      margin-top:18px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    button{
+      border:0;
+      padding:12px 18px;
+      border-radius:14px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .yes{
+      background:linear-gradient(135deg,var(--forest),var(--forest2));
+      color:var(--paper);
+    }
+
+    .later{
+      background:rgba(15,47,34,.08);
+      border:1px solid rgba(15,47,34,.2);
+      color:var(--forest);
+    }
+
+    .no{
+      background:rgba(0,0,0,.08);
+      border:1px solid rgba(0,0,0,.15);
+      color:#333;
+      position:relative;
+      white-space:nowrap;
+    }
+
+    .section{
+      margin-top:26px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:var(--radius);
+      padding:22px;
+    }
+
+    .section.light{
+      background:linear-gradient(180deg,#fbf4e6,#f6eddc);
+      color:var(--ink);
+    }
+
+    .section h2{
+      margin:0 0 10px;
+      font-size:20px;
+    }
+
+    .section p{
+      margin:0;
+      line-height:1.7;
+      font-size:15px;
+    }
+
+    .promiseRow{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+
+    @media(max-width:800px){
+      .promiseRow{ grid-template-columns:1fr; }
+    }
+
+    .promise{
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:16px;
+      opacity:0;
+      transform:translateY(12px);
+      transition:.4s ease;
+    }
+
+    .promise.show{
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:16px;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,.6);
+      color:white;
+      padding:10px 14px;
+      border-radius:14px;
+      font-size:13px;
+      opacity:0;
+      transition:.2s;
+      pointer-events:none;
+      z-index:50;
+    }
+
+    .toast.show{ opacity:1; }
+
+    .floatText{
+      position:fixed;
+      top:-30px;
+      font-size:12px;
+      font-weight:700;
+      opacity:.85;
+      pointer-events:none;
+      animation:fall linear forwards;
+    }
+
+    @keyframes fall{
+      to{ transform:translateY(calc(100vh + 60px)); }
+    }
+
+    canvas{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:40;
+    }
+
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      display:none;
+      place-items:center;
+      z-index:60;
+      padding:16px;
+    }
+
+    .modal.show{ display:grid; }
+
+    .modalCard{
+      background:linear-gradient(180deg,#fbf4e6,#f6eddc);
+      color:var(--ink);
+      border-radius:26px;
+      padding:26px;
+      max-width:720px;
+      box-shadow:0 26px 80px rgba(0,0,0,.45);
+    }
+
+    .modalCard p{
+      font-size:16px;
+      line-height:1.75;
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="brand">From Romeo ❤️</div>
+    <button class="chip" id="copyBtn">Copy message</button>
+  </header>
+
+  <section class="hero">
+    <h1>Minnie, will you be my Valentine?</h1>
+    <p class="typeLine" id="typeLine"></p>
+
+    <div class="buttons">
+      <button class="yes" id="yesBtn">Yes</button>
+      <button class="later" id="laterBtn">Tell me more</button>
+      <button class="no" id="noBtn">No</button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Why you</h2>
+    <p>
+      Baby, you make me feel insanely loved.  
+      You make me feel calm and at peace.  
+      You make me want to be a better man, a proper gentleman.  
+      And yes, you also make me want you. Badly.  
+      I will let you decide whether that’s cute or dangerous.
+    </p>
+  </section>
+
+  <section class="section light">
+    <h2>One honest confession</h2>
+    <p>
+      Last night I asked you to be my Valentine.  
+      You said “Okay”.  
+      <br><br>
+      Not yes. Not no. Just okay.  
+      And somehow that okay became our favourite joke.  
+      <br><br>
+      But here’s the truth.  
+      That okay already felt like home.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Three promises</h2>
+
+    <div class="promiseRow">
+      <div class="promise" id="p1">
+        <p>
+          I hold you closer.  
+          I kiss you randomly.  
+          I look at you and think, how did I get this lucky.
+        </p>
+      </div>
+
+      <div class="promise" id="p2">
+        <p>
+          We grow more comfortable.  
+          More sure.  
+          More us, without trying.
+        </p>
+      </div>
+
+      <div class="promise" id="p3">
+        <p>
+          I stay soft with you.  
+          I choose you in the quiet days.  
+          I keep loving you gently.
+        </p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="modal">
+  <div class="modalCard">
+    <h2>She said yes.</h2>
+    <p>
+      Baby, thank you for choosing me.  
+      <br><br>
+      Even if it started with an “Okay”.  
+      <br><br>
+      I’m not asking for a moment.  
+      I’m asking for a future.  
+      <br><br>
+      This year.  
+      Next year.  
+      For lifetime.  
+      <br><br>
+      Yours,  
+      Romeo ❤️
+    </p>
+  </div>
+</div>
+
+<script>
+  const typeLine = document.getElementById("typeLine");
+  const yesBtn = document.getElementById("yesBtn");
+  const laterBtn = document.getElementById("laterBtn");
+  const noBtn = document.getElementById("noBtn");
+  const toast = document.getElementById("toast");
+  const modal = document.getElementById("modal");
+  const copyBtn = document.getElementById("copyBtn");
+
+  const intros = [
+    "Baby, you started calling me Romeo and now I cannot pretend to be chill anymore.",
+    "Last night you said ‘Okay’ and somehow that ruined me in the best way.",
+    "So this is me asking properly. Softly. Slightly dramatically."
+  ];
+
+  let intro = intros[Math.floor(Math.random()*intros.length)];
+  let i = 0;
+  const typer = setInterval(()=>{
+    typeLine.textContent += intro[i];
+    i++;
+    if(i >= intro.length) clearInterval(typer);
+  },22);
+
+  function showToast(text){
+    toast.textContent = text;
+    toast.classList.add("show");
+    setTimeout(()=>toast.classList.remove("show"),1200);
+  }
+
+  function revealPromises(){
+    document.getElementById("p1").classList.add("show");
+    setTimeout(()=>document.getElementById("p2").classList.add("show"),140);
+    setTimeout(()=>document.getElementById("p3").classList.add("show"),280);
+  }
+
+  function spawnText(){
+    const el = document.createElement("div");
+    el.className = "floatText";
+    el.textContent = Math.random() > 0.75 ? "Please say yes for lifetime" : "Please say yes";
+    el.style.left = Math.random()*window.innerWidth+"px";
+    el.style.color = Math.random()>0.5 ? "#d46b7f" : "#c9a23a";
+    el.style.animationDuration = (6+Math.random()*5)+"s";
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),11000);
+  }
+
+  setInterval(spawnText,450);
+
+  const tease = [
+    "Baby, focus.",
+    "That’s not the button you want.",
+    "Imagine choosing No. Could not be you.",
+    "Okay now you’re flirting.",
+    "Romeo refuses this outcome."
+  ];
+
+  let t = 0;
+
+  function dodge(x,y){
+    const r = noBtn.getBoundingClientRect();
+    const dx = x - (r.left + r.width/2);
+    const dy = y - (r.top + r.height/2);
+    if(Math.hypot(dx,dy) > 140) return;
+
+    const angle = Math.atan2(dy,dx);
+    const dist = 160;
+    let left = r.left - Math.cos(angle)*dist;
+    let top = r.top - Math.sin(angle)*dist;
+
+    left = Math.max(10,Math.min(innerWidth-r.width-10,left));
+    top = Math.max(10,Math.min(innerHeight-r.height-10,top));
+
+    noBtn.style.position="fixed";
+    noBtn.style.left=left+"px";
+    noBtn.style.top=top+"px";
+  }
+
+  window.addEventListener("mousemove",e=>dodge(e.clientX,e.clientY));
+  noBtn.addEventListener("click",e=>{
+    e.preventDefault();
+    showToast(tease[t++%tease.length]);
+  });
+
+  yesBtn.addEventListener("click",()=>{
+    revealPromises();
+    modal.classList.add("show");
+    showToast("Unlocked ❤️");
+  });
+
+  laterBtn.addEventListener("click",()=>{
+    showToast("Scroll slowly, Baby");
+  });
+
+  copyBtn.addEventListener("click",async()=>{
+    await navigator.clipboard.writeText("Baby, I made you something. Open this 💛");
+    showToast("Copied");
+  });
+
+  modal.addEventListener("click",e=>{
+    if(e.target===modal) modal.classList.remove("show");
+  });
+</script>
+
+</body>
+</html>
